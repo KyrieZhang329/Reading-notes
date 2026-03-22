@@ -85,7 +85,7 @@ $$
 $$
 e.g.\qquad{B}=
 \begin{pmatrix}
-\prescript{A}{B}{R},\;\prescript{A}{}{P_{BORG}}
+\prescript{A}{B}{R}\quad\prescript{A}{}{P_{BORG}}
 \end{pmatrix}
 $$
 其中 $\prescript{A}{}{P_{BORG}}$ 是确定位姿 **$B$** 的原点的位置矢量
@@ -95,4 +95,189 @@ $$
 
 
 ## 映射：从一个坐标系到另一个坐标系的变换
+
+### 坐标平移
+
+假设空间中两个坐标系**{A}**与**{B}**的姿态相同，此时两者之间不同的只是**平移**，可以用矢量 **$\prescript{A}{}{P_{BORG}}$** 来表示**{B}**的原点位置相对于**{A}**的原点位置
+
+一个位置在坐标系**{B}**中的表示为 $\prescript{B}{}{P}$ ，则可以使用矢量相加的方法求其在坐标系**{A}**中的表示 $\prescript{A}{}{P}$ ：
+$$
+\prescript{A}{}{P}=\prescript{B}{}{P}+\prescript{A}{}{P_{BORG}}\\
+\text{p.s.  \quad只有在不同坐标系姿态相同时才可以使用这种办法相加}
+$$
+这就是一个简单的矢量在不同坐标系中的**映射**，称矢量 $\prescript{A}{}{P_{BORG}}$ 定义了这个映射
+
+### 坐标旋转
+
+用符号 $\prescript{A}{B}{R}$ 来表示**{B}**相对于**{A}**的$3\times3$的旋转矩阵，旋转矩阵各列的模**均为1**，且这些单位矢量均相互正交：
+$$
+\prescript{A}{B}{R}=\prescript{B}{A}{R^{-1}}=\prescript{B}{A}{R^{T}}
+$$
+在已知一个位置相对于**{B}**的定义 $\prescript{B}{}{P}$ ，现想求其相对于另一个与**{B}**原点重合的坐标系**{A}**的定义 $\prescript{A}{}{P}$ ，这个变换就可以由旋转矩阵 $\prescript{A}{B}{R}$ 来描述
+
+注意到描述位置 $\prescript{A}{}{P}$ 的矢量的每个分量就是其向坐标系上单位矢量方向的投影，则可以由矢量点积来计算其分量：
+$$
+\prescript{A}{}{p_x}=\prescript{B}{}{\hat{X}_A}\;\cdot\prescript{B}{}{P}\\
+\prescript{A}{}{p_y}=\prescript{B}{}{\hat{Y}_A}\;\cdot\prescript{B}{}{P}\\
+\prescript{A}{}{p_z}=\prescript{B}{}{\hat{Z}_A}\;\cdot\prescript{B}{}{P}\\
+$$
+用旋转矩阵来表示：
+$$
+\prescript{A}{}{P}=\prescript{A}{B}{R}\prescript{B}{}{P}
+$$
+这即是一个矢量旋转变换的描述映射，可以看作该符号记法的前一个变量左下标消掉了后面变量的左上标
+
+### 一般变换
+
+在机器人学问题中，坐标的平移和旋转通常同时存在，这两个变换同时存在的映射即为一般变换
+
+现已知确定坐标系**{B}**原点相对于坐标系**{A}**位置的矢量 $\prescript{A}{}{P_{BORG}}$ ，以及**{B}**相对于**{A}**的旋转矩阵 $\prescript{A}{B}{R}$
+
+则**{B}**相对于**{A}**的变换可以表示为：
+$$
+\prescript{A}{}{P}=\prescript{A}{B}{R}\prescript{B}{}{P}+\prescript{A}{}{P_{BORG}}
+$$
+由此可以引入一个新的概念形式：
+$$
+\prescript{A}{}{P}=\prescript{A}{B}{T}\prescript{B}{}{P}
+$$
+代表用一个矩阵形式的算子直接表示从**{B}**到**{A}**的映射，相比较之前的表示更加简洁明确，该公式的具体形式为：
+$$
+\begin{pmatrix}
+\prescript{A}{}{P}\\1
+\end{pmatrix}=
+\begin{pmatrix}
+\prescript{A}{B}{R}&\prescript{A}{}{P_{BORG}}\\
+0\;0\;0&1
+\end{pmatrix}
+\begin{pmatrix}
+\prescript{B}{}{P}\\1
+\end{pmatrix}
+$$
+其中 $\prescript{A}{B}{T}$ 称为**齐次变换矩阵**，可直接用于坐标系**{B}**到**{A}**的变换描述
+
+
+
+## 算子：平移、旋转和变换
+
+用于坐标系间点的映射的**通用数学表达式**称为**算子**
+
+和“坐标映射”的区别在于：
+
+- **映射**强调“同一个点在不同坐标系中的表示如何转换,强调坐标系的变换”
+- **算子**强调“对一个矢量/点施加某种操作，在同一个坐标系中，得到新的矢量/点”
+
+两者**数学形式可以相同**，但**物理解释不同**
+
+------
+
+### 平移算子
+
+平移是指将空间中的一个点沿着某个已知方向移动一定距离
+
+设在坐标系 **{A}** 中，一个点由位置矢量 $\prescript{A}{}{P_1}$ 表示，沿矢量 $\prescript{A}{}{Q}$ 平移后得到新点 $\prescript{A}{}{P_2}$ ，则有：
+$$
+\prescript{A}{}{P_2}=\prescript{A}{}{P_1}+\prescript{A}{}{Q}
+$$
+若把平移写成矩阵算子形式，则可记为：
+$$
+\prescript{A}{}{P_2}=D_Q(q)\prescript{A}{}{P_1}
+$$
+其中 $D_Q(q)$ 表示沿矢量 $Q$ 方向平移的算子，其齐次形式可写为：
+$$
+D_Q(q)=
+\begin{pmatrix}
+1&0&0&q_x\\
+0&1&0&q_y\\
+0&0&1&q_z\\
+0&0&0&1
+\end{pmatrix}
+$$
+
+
+其中 $q_x,q_y,q_z$ 是平移矢量 $Q$ 的三个分量，且
+$$
+q=\sqrt{q_x^2+q_y^2+q_z^2}
+$$
+
+### 旋转算子
+
+旋转算子表示将一个矢量绕某一轴旋转一定角度，得到新的矢量
+
+设点（或矢量） $\prescript{A}{}{P_1}$ 经旋转后得到 $\prescript{A}{}{P_2}$ ，则可写为：
+$$
+\prescript{A}{}{P_2}=R\prescript{A}{}{P_1}
+$$
+为了明确旋转轴与旋转角，通常记作：
+$$
+\prescript{A}{}{P_2}=R_K(\theta)\prescript{A}{}{P_1}
+$$
+其中：
+
+- $K$ 表示旋转轴
+- $\theta$ 表示绕该轴旋转的角度
+
+若绕 $Z$ 轴旋转 $\theta$ ，对应的齐次旋转算子为：
+$$
+R_Z(\theta)=
+\begin{pmatrix}
+\cos\theta&-\sin\theta&0&0\\
+\sin\theta&\cos\theta&0&0\\
+0&0&1&0\\
+0&0&0&1\
+\end{pmatrix}
+$$
+若只考虑位置矢量的旋转，也可只取其左上角的 $3\times3$ 旋转矩阵：
+$$
+R_Z(\theta)=
+\begin{pmatrix}
+\cos\theta&-\sin\theta&0\\
+\sin\theta&\cos\theta&0\\
+0&0&1
+\end{pmatrix}
+$$
+旋转算子同样只涉及**一个坐标系内的矢量变化**
+
+------
+
+### 变换算子
+
+平移和旋转可以合并为一个统一的变换算子
+
+设点 $\prescript{A}{}{P_1}$ 经过“先旋转、再平移”后得到 $\prescript{A}{}{P_2}$ ，则有：
+$$
+\prescript{A}{}{P_2}=T\prescript{A}{}{P_1}
+$$
+其中 $T$ 为齐次变换算子，一般形式为：
+$$
+T=
+\begin{pmatrix}
+R&Q\\
+0&1
+\end{pmatrix}
+$$
+展开写为：
+$$
+T=
+\begin{pmatrix}
+r_{11}&r_{12}&r_{13}&q_x\\
+r_{21}&r_{22}&r_{23}&q_y\\
+r_{31}&r_{32}&r_{33}&q_z\\
+0&0&0&1
+\end{pmatrix}
+$$
+于是其次坐标下有：
+$$
+ \begin{pmatrix} \prescript{A}{}{P_2}\\ 1 \end{pmatrix}=
+
+\begin{pmatrix}
+R&Q\\
+0&1
+\end{pmatrix}
+\begin{pmatrix}
+\prescript{A}{}{P_1}\\
+1
+\end{pmatrix}
+$$
+
 
