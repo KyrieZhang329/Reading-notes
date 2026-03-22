@@ -12,3 +12,11 @@ Due to practical requirements, some notes may only cover selected chapters.
 
 - **Introduction to Robotics** by ***John J. Craig***
 
+
+
+## Acknowledgements
+
+The style of the Typora comes from [Jie Yang(Muyiiiii)]([Muyiiiii (Jie Yang)](https://github.com/Muyiiiii)).
+
+Special thanks to him !
+
