@@ -18,5 +18,5 @@ Due to practical requirements, some notes may only cover selected chapters.
 
 The style of the Typora comes from [Jie Yang(Muyiiiii)]([Muyiiiii (Jie Yang)](https://github.com/Muyiiiii)).
 
-Special thanks to him !
+Special thanks to the author !
 
